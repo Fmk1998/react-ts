@@ -15,6 +15,7 @@ const DynamicRouter: FunctionComponent<Props> = () => {
         <Suspense fallback={Loading}>
             <Switch>
                 <Route exact path='/' component={lazyImport('home/index')}/>
+                <Route exact path='/demo' component={lazyImport('demo/index')}/>
             </Switch>
         </Suspense>
     );

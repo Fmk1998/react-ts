@@ -1,12 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from "react-redux";
+import {store} from "./store"; // 数据仓库
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import {createMuiTheme, ThemeProvider} from '@material-ui/core';
+import blue from "@material-ui/core/colors/blue";
+
+const theme = createMuiTheme({
+    palette: {
+        primary: blue
+    }
+});
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <Provider store={store}>
+        <ThemeProvider theme={theme}>
+            <App />
+        </ThemeProvider>
+    </Provider>,
   document.getElementById('root')
 );
 

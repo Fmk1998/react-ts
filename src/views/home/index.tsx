@@ -1,5 +1,8 @@
 import React, {FunctionComponent,Fragment, useEffect, useState} from "react";
-import {RouteComponentProps} from "react-router-dom";
+import {useDispatch, connect} from "react-redux"
+import {withRouter, RouteComponentProps} from "react-router-dom";
+import {Button} from "@material-ui/core";
+import {DEMO_TEXT} from "../../store/action-types";
 
 
 
@@ -17,15 +20,22 @@ const mapStateToProps = (state: State) => {
 };
 
 const Home: FunctionComponent<Props> = (props) => {
+    const dispatch = useDispatch();
 
-    const [text,setText] = useState("123");
+    const [text,setText] = useState("fmk");
 
+    useEffect(()=>{
+        dispatch({
+            type: DEMO_TEXT,
+            data: text
+        })
+    },[]);
 
     return (
         <Fragment>
-            <h1>home</h1>
+            <Button variant="contained" color="secondary" onClick={()=>props.history.push("/demo")}>Demo</Button>
         </Fragment>
     );
 };
 
-export default Home;
+export default withRouter(connect(mapStateToProps, null)(Home));
