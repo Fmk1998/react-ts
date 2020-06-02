@@ -1,15 +1,20 @@
 import React, {FunctionComponent, useEffect} from 'react';
 import {withRouter, RouteComponentProps} from "react-router-dom";
-import {useDispatch, connect} from "react-redux"
-import AppBar from "@material-ui/core/AppBar"
-import Toolbar from "@material-ui/core/Toolbar"
-import Button from "@material-ui/core/Button"
-import IconButton from "@material-ui/core/IconButton"
-import Typography from "@material-ui/core/Typography"
+import {useDispatch, connect} from "react-redux";
+import { FormattedMessage } from 'react-intl';
+import {SETTING} from "../../../store/action-types";
+
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
 import MenuIcon from '@material-ui/icons/Menu';
+import Translate from "@material-ui/icons/Translate"
 
 import './index.scss';
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
+import {Menu, MenuItem} from "@material-ui/core";
 
 interface OwnProps extends RouteComponentProps {
 
@@ -38,6 +43,49 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
+// 语言切换
+const Language = () => {
+    const dispatch = useDispatch();
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    //获取点击事件元素
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget)
+    };
+
+    //关闭点击元素
+    const handleClose = () => {
+        setAnchorEl(null)
+    };
+
+    //修改语言
+    const changeLanguage = (lang: string) => {
+        dispatch({
+            type: SETTING,
+            payload: lang
+        })
+        handleClose()
+    };
+
+    return (
+        <div className="language">
+            <Button aria-controls="simple-menu" onClick={handleClick} style={{color: "#ffffff"}}>
+                <Translate/>
+                <span>Language</span>
+            </Button>
+            <Menu
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
+                <MenuItem onClick={() => changeLanguage("zh")}>中文</MenuItem>
+                <MenuItem onClick={() => changeLanguage("en")}>English</MenuItem>
+            </Menu>
+        </div>
+    );
+}
+
 const Header: FunctionComponent<Props> = (props) => {
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -52,9 +100,15 @@ const Header: FunctionComponent<Props> = (props) => {
                     <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
-                    News
+                    <FormattedMessage
+                        id="title"
+                    />
                 </Typography>
-                <Button color="inherit">Login</Button>
+                <Language/>
+                <Button color="inherit">
+                    <FormattedMessage
+                    id="login"
+                /></Button>
             </Toolbar>
         </AppBar>
     )

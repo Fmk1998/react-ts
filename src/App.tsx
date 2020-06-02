@@ -1,4 +1,6 @@
 import React, {FunctionComponent} from 'react';
+import {IntlProvider} from "react-intl"; // 国际化
+import Lang from "./locale";
 import {HashRouter} from 'react-router-dom';
 import {History} from "history";
 import {connect} from "react-redux";
@@ -10,6 +12,7 @@ import SlideBar from './components/layout/SlideBar';
 import MyErrorBoundary from "./components/error/ErrorBoundary";
 
 interface OwnProps {
+    language?: any,
     history: History
 }
 
@@ -20,13 +23,26 @@ interface State {
 type Props = OwnProps;
 
 const mapPropsToState = (state: State) => {
+    return state.setting;
 };
 
-const App: FunctionComponent<Props> = ({history}: Props) => {
+const App: FunctionComponent<Props> = ({history, language}: Props) => {
+
+    const getLocalMessage = () => {
+        let msg: object;
+        if (language === "zh-CN" || language === "zh") {
+            msg = Lang.zh;
+        } else {
+            msg = Lang.en;
+        }
+        return {...msg};
+    };
+
     return (
         <MyErrorBoundary>
             <ConnectedRouter history={history}>
                 <HashRouter>
+                    <IntlProvider key="intl" locale={language} messages={getLocalMessage()}>
                     <Grid container style={{width: '100%', height: '100%', display: 'flex'}}>
                         <Grid item style={{width: '100%'}}>
                             <Header/>
@@ -38,6 +54,7 @@ const App: FunctionComponent<Props> = ({history}: Props) => {
                             <Main/>
                         </Grid>
                     </Grid>
+                    </IntlProvider>
                 </HashRouter>
             </ConnectedRouter>
         </MyErrorBoundary>
